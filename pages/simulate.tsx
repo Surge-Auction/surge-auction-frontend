@@ -16,7 +16,8 @@ import {
   InputGroup,
   InputLeftAddon,
   InputRightAddon,
-  Stack
+  Stack,
+  Flex
 } from '@chakra-ui/react';
 import { useEthers } from '@usedapp/core';
 import Layout from '../components/layout/Layout';
@@ -35,7 +36,9 @@ function Simulate(): JSX.Element {
       </Heading>
       <Box maxWidth="container.sm">
         <Box pb={5}>
-          <FunctionPlot />
+          <Stack align="center">
+            <FunctionPlot />
+          </Stack>
           <Box pt={5}>
             <Stack spacing={4} direction="row" align="center">
               {/* Start/Stop */}

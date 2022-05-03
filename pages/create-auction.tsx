@@ -12,7 +12,7 @@ import {
 import { useEthers } from '@usedapp/core';
 import Layout from '../components/layout/Layout';
 
-function Simulate(): JSX.Element {
+function CreateAuction(): JSX.Element {
   const { library } = useEthers();
 
   return (
@@ -26,4 +26,4 @@ function Simulate(): JSX.Element {
   );
 }
 
-export default Simulate;
+export default CreateAuction;

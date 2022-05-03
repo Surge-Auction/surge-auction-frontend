@@ -78,64 +78,69 @@ const Layout = ({ children, customMeta }: LayoutProps): JSX.Element => {
       <Head customMeta={customMeta} />
       <ColorModeScript initialColorMode={Theme.config.initialColorMode} />
       <header>
-        <Container maxWidth="container.xl">
-          <SimpleGrid
-            columns={[1, 1, 1, 2]}
-            alignItems="center"
-            justifyContent="space-between"
-            py="8"
-          >
-            <Flex py={[4, null, null, 0]}>
-              <NextLink href="/" passHref>
-                <Link px="4" py="1">
-                  Home
-                </Link>
-              </NextLink>
-              <NextLink href="/create-auction" passHref>
-                <Link px="4" py="1">
-                  Create Auction
-                </Link>
-              </NextLink>
-              <NextLink href="/simulate" passHref>
-                <Link px="4" py="1">
-                  Simulate
-                </Link>
-              </NextLink>
-              <NextLink href="https://abrandecarlo.gitbook.io/surge-auction/" passHref>
-                <Link px="4" py="1">
-                  Docs
-                </Link>
-              </NextLink>
-            </Flex>
-            <Flex></Flex>
-            {account ? (
-              <Flex order={[-1, null, null, 2]} alignItems={'center'} justifyContent={'flex-end'}>
-                <Balance />
-                <Image ml="4" src={blockieImageSrc} alt="blockie" />
-                <Menu placement="bottom-end">
-                  <MenuButton as={Button} ml="4">
-                    {truncateHash(account)}
-                  </MenuButton>
-                  <MenuList>
-                    <MenuItem onClick={deactivate}>Disconnect</MenuItem>
-                  </MenuList>
-                </Menu>
-                <IconButton ml="4" aria-label="Toggle Mode" onClick={toggleColorMode}>
-                  {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
-                </IconButton>
-              </Flex>
-            ) : (
-              <Flex order={[-1, null, null, 2]} alignItems={'center'} justifyContent={'flex-end'}>
-                <ConnectWallet />
-                <Flex order={[-1, null, null, 2]} alignItems={'center'} justifyContent={'flex-end'}>
-                  <IconButton ml="4" aria-label="Toggle Mode" onClick={toggleColorMode}>
-                    {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
-                  </IconButton>
+        <Flex minWidth="max-content">
+          <Container minWidth="max-content" alignItems="center" flex="">
+            <SimpleGrid
+              columns={[1, 1, 1, 2]}
+              alignItems="center"
+              justifyContent="space-between"
+              py="8"
+            >
+              <Flex>
+                <Flex pt={0.65}>
+                  <NextLink href="/" passHref>
+                    <Link px="4" py="1">
+                      Home
+                    </Link>
+                  </NextLink>
+                  <NextLink href="/create-auction" passHref>
+                    <Link px="4" py="1">
+                      Create Auction
+                    </Link>
+                  </NextLink>
+                  <NextLink href="/simulate" passHref>
+                    <Link px="4" py="1">
+                      Simulate
+                    </Link>
+                  </NextLink>
+                  <NextLink href="https://abrandecarlo.gitbook.io/surge-auction/" passHref>
+                    <Link px="4" py="1">
+                      Docs
+                    </Link>
+                  </NextLink>
                 </Flex>
+                {account ? (
+                  <Flex justifyContent={'flex-end'}>
+                    <Menu placement="bottom-end">
+                      <MenuButton as={Button} ml="4">
+                        {truncateHash(account)}
+                      </MenuButton>
+                      <MenuList>
+                        <MenuItem onClick={deactivate}>Disconnect</MenuItem>
+                      </MenuList>
+                    </Menu>
+                    <IconButton ml="4" aria-label="Toggle Mode" onClick={toggleColorMode}>
+                      {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+                    </IconButton>
+                  </Flex>
+                ) : (
+                  <Flex justifyContent={'flex-end'}>
+                    <ConnectWallet />
+                    <Flex
+                      order={[-1, null, null, 2]}
+                      alignItems={'center'}
+                      justifyContent={'flex-end'}
+                    >
+                      <IconButton ml="4" aria-label="Toggle Mode" onClick={toggleColorMode}>
+                        {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+                      </IconButton>
+                    </Flex>
+                  </Flex>
+                )}
               </Flex>
-            )}
-          </SimpleGrid>
-        </Container>
+            </SimpleGrid>
+          </Container>
+        </Flex>
       </header>
       <main>
         <Container maxWidth="container.xl">
@@ -165,25 +170,28 @@ const Layout = ({ children, customMeta }: LayoutProps): JSX.Element => {
           })}
         </Container>
       </main>
+
       <footer>
-        <Container mt="8" py="8" maxWidth="container.xl">
-          <SimpleGrid
-            columns={[1, 1, 1, 2]}
-            alignItems="center"
-            justifyContent="space-between"
-            py="8"
-          >
-            <Flex py={[4, null, null, 0]}>
-              <Text px="4" py="1">
-                Built by <Link href="https://twitter.com/abran_decarlo">Abran DeCarlo</Link>
-              </Text>
-              <Spacer />
-              <Link px="4" py="1">
-                Github
-              </Link>
-            </Flex>
-          </SimpleGrid>
-        </Container>
+        <Flex minWidth="max-content">
+          <Container minWidth="max-content" alignItems="center" flex="">
+            <SimpleGrid
+              columns={[1, 1, 1, 2]}
+              alignItems="center"
+              justifyContent="space-between"
+              py="8"
+            >
+              <Flex>
+                <Text px="4" py="1">
+                  Built by <Link href="https://twitter.com/abran_decarlo">Abran DeCarlo</Link>
+                </Text>
+                <Spacer />
+                <Link px="4" py="1">
+                  Github
+                </Link>
+              </Flex>
+            </SimpleGrid>
+          </Container>
+        </Flex>
       </footer>
     </>
   );
