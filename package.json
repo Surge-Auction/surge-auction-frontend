@@ -10,6 +10,7 @@
     "type-check": "tsc --pretty --noEmit",
     "format": "prettier --write .",
     "lint": "eslint . --ext ts --ext tsx --ext js",
+    "prettier": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
     "test": "jest",
     "test-all": "yarn lint && yarn type-check && yarn test"
   },
@@ -37,6 +38,7 @@
     "blockies-ts": "^1.0.0",
     "deepmerge": "^4.2.2",
     "desmos": "^1.5.4",
+    "eslint-plugin-prettier": "^4.0.0",
     "ethers": "^5.1.4",
     "framer-motion": "^4",
     "function-plot": "^1.22.8",
@@ -56,7 +58,7 @@
     "babel-jest": "^26.6.3",
     "eslint": "^7.19.0",
     "eslint-config-next": "^11.0.1",
-    "eslint-config-prettier": "^7.2.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^4.2.3",
@@ -64,7 +66,7 @@
     "jest": "^26.6.3",
     "jest-watch-typeahead": "^0.6.1",
     "lint-staged": "^10.0.10",
-    "prettier": "^2.0.2",
+    "prettier": "^2.6.2",
     "typescript": "^4.6.4"
   }
 }

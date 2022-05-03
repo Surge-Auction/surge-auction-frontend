@@ -1,34 +1,34 @@
-import NextHead from 'next/head'
-import { useRouter } from 'next/router'
-import React from 'react'
+import NextHead from 'next/head';
+import { useRouter } from 'next/router';
+import React from 'react';
 
 /**
  * Constants & Helpers
  */
-export const WEBSITE_HOST_URL = ''
+export const WEBSITE_HOST_URL = '';
 
 /**
  * Prop Types
  */
 export interface MetaProps {
-  description?: string
-  image?: string
-  title: string
-  type?: string
+  description?: string;
+  image?: string;
+  title: string;
+  type?: string;
 }
 
 /**
  * Component
  */
 const Head = ({ customMeta }: { customMeta?: MetaProps }): JSX.Element => {
-  const router = useRouter()
+  const router = useRouter();
   const meta: MetaProps = {
     title: 'Surge Auction',
     description: 'Modular surge auction framework',
     image: `${WEBSITE_HOST_URL}/images/site-preview.png`,
     type: 'website',
-    ...customMeta,
-  }
+    ...customMeta
+  };
 
   return (
     <NextHead>
@@ -47,7 +47,7 @@ const Head = ({ customMeta }: { customMeta?: MetaProps }): JSX.Element => {
       <meta name="twitter:description" content={meta.description} />
       <meta name="twitter:image" content={meta.image} />
     </NextHead>
-  )
-}
+  );
+};
 
-export default Head
+export default Head;

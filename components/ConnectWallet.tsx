@@ -8,23 +8,20 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  useDisclosure,
-} from '@chakra-ui/react'
-import { useEthers } from '@usedapp/core'
-import React from 'react'
-import { walletconnect, walletlink } from '../lib/connectors'
+  useDisclosure
+} from '@chakra-ui/react';
+import { useEthers } from '@usedapp/core';
+import React from 'react';
+import { walletconnect, walletlink } from '../lib/connectors';
 
 function ConnectWallet(): JSX.Element {
-  const { activate, activateBrowserWallet } = useEthers()
+  const { activate, activateBrowserWallet } = useEthers();
 
-  const { onOpen, isOpen, onClose } = useDisclosure()
+  const { onOpen, isOpen, onClose } = useDisclosure();
 
   return (
     <>
-      <Box
-        order={[-1, null, null, 2]}
-        textAlign={['left', null, null, 'right']}
-      >
+      <Box order={[-1, null, null, 2]} textAlign={['left', null, null, 'right']}>
         <Button colorScheme="teal" variant="outline" onClick={onOpen}>
           Connect to a wallet
         </Button>
@@ -41,15 +38,9 @@ function ConnectWallet(): JSX.Element {
               mb="4"
               size="lg"
               variant="outline"
-              rightIcon={
-                <Image
-                  maxWidth="20px"
-                  src="/images/logo-metamask.png"
-                  alt="MetaMask"
-                />
-              }
+              rightIcon={<Image maxWidth="20px" src="/images/logo-metamask.png" alt="MetaMask" />}
               onClick={() => {
-                activateBrowserWallet()
+                activateBrowserWallet();
               }}
             >
               MetaMask
@@ -61,14 +52,10 @@ function ConnectWallet(): JSX.Element {
               size="lg"
               variant="outline"
               rightIcon={
-                <Image
-                  maxWidth="20px"
-                  src="/images/logo-walletconnect.svg"
-                  alt="WalletConnect"
-                />
+                <Image maxWidth="20px" src="/images/logo-walletconnect.svg" alt="WalletConnect" />
               }
               onClick={() => {
-                activate(walletconnect)
+                activate(walletconnect);
               }}
             >
               WalletConnect
@@ -80,14 +67,10 @@ function ConnectWallet(): JSX.Element {
               size="lg"
               variant="outline"
               rightIcon={
-                <Image
-                  maxWidth="20px"
-                  src="/images/logo-coinbase.jpg"
-                  alt="Coinbase Wallet"
-                />
+                <Image maxWidth="20px" src="/images/logo-coinbase.jpg" alt="Coinbase Wallet" />
               }
               onClick={() => {
-                activate(walletlink)
+                activate(walletlink);
               }}
             >
               Coinbase Wallet
@@ -96,7 +79,7 @@ function ConnectWallet(): JSX.Element {
         </ModalContent>
       </Modal>
     </>
-  )
+  );
 }
 
-export default ConnectWallet
+export default ConnectWallet;
