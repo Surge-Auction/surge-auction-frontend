@@ -2,16 +2,12 @@ import {
   Box,
   Button,
   Heading,
-  Input,
   Text,
   Slider,
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
   SliderMark,
-  InputGroup,
-  InputLeftAddon,
-  InputRightAddon,
   Stack,
   Spacer,
   Tooltip,
@@ -27,21 +23,22 @@ import functionPlot from 'function-plot';
 
 function Simulate(): JSX.Element {
   /* Equation values */
-  const [floorPriceValue, setFloorpriceValue] = useState(1);
+  const [floorPriceValue, setFloorpriceValue] = useState(10);
   // Have maxima default to result of tValue
-  const [maximaValue, setMaximaValue] = useState(1);
+  const [maximaValue, setMaximaValue] = useState(20);
   // Surge amount as a percentage.  Cannot exceed 100% (maxima)
   const [surgeAmount, setSurgeAmount] = useState(1);
   const [decayLength, setDecayLength] = useState(1);
 
   // How to calc t is yet to be known
-  const [tValue, setTValue] = useState(1);
+  const [tValue, setTValue] = useState(maximaValue);
 
   // Final price
   const [price, setPrice] = useState(1);
 
+  const [blockCounter, setBlockCounter] = React.useState(1);
+
   /* Slider Tooltip values */
-  const [showTooltipFloorPrice, setShowTooltipFloorPrice] = useState(false);
   const [showTooltipMaxima, setShowTooltipMaxima] = useState(false);
   const [showTooltipSurgeAmount, setShowTooltipSurgeAmount] = useState(false);
   const [showTooltipDecayL, setShowTooltipDecayL] = useState(false);
@@ -85,6 +82,28 @@ function Simulate(): JSX.Element {
 
   /* End of the function plot */
 
+  useEffect(() => {
+    let timer: any;
+    if (startButton == true) {
+      timer = blockCounter > 0 && setInterval(() => setBlockCounter(blockCounter + 1), 1000);
+
+      if (resetButton == true) {
+        setResetButton(false);
+        setStartButton(false);
+        setBlockCounter(1);
+        // Not sure if return needed here
+        return () => clearInterval(timer);
+      }
+      return () => clearInterval(timer);
+    }
+
+    if (resetButton == true) {
+      setBlockCounter(1);
+      clearInterval(timer);
+      setResetButton(false);
+    }
+  }, [startButton, resetButton, blockCounter]);
+
   return (
     <Layout>
       <Heading as="h1" mb="12">
@@ -98,10 +117,14 @@ function Simulate(): JSX.Element {
           <Box pt={5}>
             <Stack spacing={4} direction="row" align="center">
               {/* Start/Stop */}
-              <Button colorScheme="teal" variant="outline">
+              <Button
+                colorScheme="teal"
+                variant="outline"
+                onClick={() => setStartButton((event) => !event)}
+              >
                 Start
               </Button>
-              <Button colorScheme="teal" variant="outline">
+              <Button colorScheme="teal" variant="outline" onClick={() => setResetButton(true)}>
                 Reset
               </Button>
               <Button colorScheme="teal" variant="outline">
@@ -109,7 +132,7 @@ function Simulate(): JSX.Element {
               </Button>
               <Spacer />
               <Box>
-                <Text># Block</Text>
+                <Text>Block {blockCounter}</Text>
               </Box>
             </Stack>
           </Box>
@@ -122,7 +145,7 @@ function Simulate(): JSX.Element {
           <NumberInput
             onChange={(val) => setFloorpriceValue(Number(val))}
             value={floorPriceValue}
-            max={50}
+            min={1}
           >
             <NumberInputField />
             <NumberInputStepper>
@@ -150,8 +173,8 @@ function Simulate(): JSX.Element {
             </NumberInput>
             {/* Slider */}
             <Slider
-              aria-label="slider-ex-6"
-              defaultValue={1}
+              aria-label="maxima"
+              defaultValue={maximaValue}
               min={1}
               max={100}
               onChange={(val) => setMaximaValue(val)}
@@ -159,7 +182,7 @@ function Simulate(): JSX.Element {
               onMouseLeave={() => setShowTooltipMaxima(false)}
             >
               <SliderMark value={0} mt="1" ml="1" fontSize="sm">
-                0
+                1
               </SliderMark>
 
               <SliderMark value={92.5} mt="1" ml="1" fontSize="sm">
@@ -203,8 +226,8 @@ function Simulate(): JSX.Element {
             </NumberInput>
             {/* Slider */}
             <Slider
-              aria-label="slider-ex-6"
-              defaultValue={5}
+              aria-label="t value"
+              defaultValue={tValue}
               min={1}
               max={100}
               onChange={(val) => setTValue(val)}
@@ -212,7 +235,7 @@ function Simulate(): JSX.Element {
               onMouseLeave={() => setShowTooltipTValue(false)}
             >
               <SliderMark value={0} mt="1" ml="1" fontSize="sm">
-                0
+                1
               </SliderMark>
 
               <SliderMark value={92.5} mt="1" ml="1" fontSize="sm">
@@ -259,8 +282,8 @@ function Simulate(): JSX.Element {
             </NumberInput>
             {/* Slider */}
             <Slider
-              aria-label="slider-ex-6"
-              defaultValue={5}
+              aria-label="Surge Amount"
+              defaultValue={surgeAmount}
               min={0}
               max={100}
               onChange={(val) => setSurgeAmount(val)}
@@ -314,8 +337,8 @@ function Simulate(): JSX.Element {
               </NumberInputStepper>
             </NumberInput>
             <Slider
-              aria-label="slider-ex-6"
-              defaultValue={5}
+              aria-label="Decay Length"
+              defaultValue={decayLength}
               min={0}
               max={100}
               onChange={(val) => setDecayLength(val)}
