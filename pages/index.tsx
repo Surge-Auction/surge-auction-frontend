@@ -1,7 +1,7 @@
-import { Box, Divider, Text, Center } from '@chakra-ui/react';
+import { Box, Divider, Text, Center } from '@chakra-ui/react'
 
-import React from 'react';
-import Layout from '../components/layout/Layout';
+import React from 'react'
+import Layout from '../components/layout/Layout'
 
 function HomeIndex(): JSX.Element {
   return (
@@ -14,7 +14,7 @@ function HomeIndex(): JSX.Element {
         <Divider my="8" borderColor="gray.400" w="100%" />
       </Box>
     </Layout>
-  );
+  )
 }
 
-export default HomeIndex;
+export default HomeIndex

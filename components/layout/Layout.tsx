@@ -16,22 +16,21 @@ import {
   Spacer,
   Text,
   ColorModeScript
-} from '@chakra-ui/react';
-import { useColorMode } from '@chakra-ui/color-mode';
-import { MoonIcon, SunIcon } from '@chakra-ui/icons';
-import { IconButton } from '@chakra-ui/button';
-import { useEthers, useNotifications } from '@usedapp/core';
-import blockies from 'blockies-ts';
-import NextLink from 'next/link';
-import React from 'react';
-import ConnectWallet from '../ConnectWallet';
-import Head, { MetaProps } from './Head';
-import Theme from './Theme';
+} from '@chakra-ui/react'
+import { useColorMode } from '@chakra-ui/color-mode'
+import { MoonIcon, SunIcon } from '@chakra-ui/icons'
+import { IconButton } from '@chakra-ui/button'
+import { useEthers, useNotifications } from '@usedapp/core'
+import NextLink from 'next/link'
+import React from 'react'
+import ConnectWallet from '../ConnectWallet'
+import Head, { MetaProps } from './Head'
+import Theme from './Theme'
 
 // Extends `window` to add `ethereum`.
 declare global {
   interface Window {
-    ethereum: any;
+    ethereum: any
   }
 }
 
@@ -43,33 +42,28 @@ declare global {
 const TRANSACTION_TITLES = {
   transactionStarted: 'Local Transaction Started',
   transactionSucceed: 'Local Transaction Completed'
-};
+}
 
 // Takes a long hash string and truncates it.
 function truncateHash(hash: string, length = 38): string {
-  return hash.replace(hash.substring(6, length), '...');
+  return hash.replace(hash.substring(6, length), '...')
 }
 
 /**
  * Prop Types
  */
 interface LayoutProps {
-  children: React.ReactNode;
-  customMeta?: MetaProps;
+  children: React.ReactNode
+  customMeta?: MetaProps
 }
 
 /**
  * Component
  */
 const Layout = ({ children, customMeta }: LayoutProps): JSX.Element => {
-  const { account, deactivate } = useEthers();
-  const { notifications } = useNotifications();
-  const { colorMode, toggleColorMode } = useColorMode();
-
-  let blockieImageSrc;
-  if (typeof window !== 'undefined') {
-    blockieImageSrc = blockies.create({ seed: account }).toDataURL();
-  }
+  const { account, deactivate } = useEthers()
+  const { notifications } = useNotifications()
+  const { colorMode, toggleColorMode } = useColorMode()
 
   return (
     <>
@@ -145,7 +139,7 @@ const Layout = ({ children, customMeta }: LayoutProps): JSX.Element => {
           {children}
           {notifications.map((notification) => {
             if (notification.type === 'walletConnected') {
-              return null;
+              return null
             }
             return (
               <Alert
@@ -164,7 +158,7 @@ const Layout = ({ children, customMeta }: LayoutProps): JSX.Element => {
                   </AlertDescription>
                 </Box>
               </Alert>
-            );
+            )
           })}
         </Container>
       </main>
@@ -192,7 +186,7 @@ const Layout = ({ children, customMeta }: LayoutProps): JSX.Element => {
         </Flex>
       </footer>
     </>
-  );
-};
+  )
+}
 
-export default Layout;
+export default Layout

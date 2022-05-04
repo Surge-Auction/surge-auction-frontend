@@ -1,5 +1,5 @@
-import { Box, Heading } from '@chakra-ui/react';
-import Layout from '../components/layout/Layout';
+import { Box, Heading } from '@chakra-ui/react'
+import Layout from '../components/layout/Layout'
 
 function CreateAuction(): JSX.Element {
   return (
@@ -10,7 +10,7 @@ function CreateAuction(): JSX.Element {
       <Box maxWidth="container.sm"></Box>
       <Box></Box>
     </Layout>
-  );
+  )
 }
 
-export default CreateAuction;
+export default CreateAuction

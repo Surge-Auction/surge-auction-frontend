@@ -9,15 +9,15 @@ import {
   ModalHeader,
   ModalOverlay,
   useDisclosure
-} from '@chakra-ui/react';
-import { useEthers } from '@usedapp/core';
-import React from 'react';
-import { walletconnect, walletlink } from '../lib/connectors';
+} from '@chakra-ui/react'
+import { useEthers } from '@usedapp/core'
+import React from 'react'
+import { walletconnect, walletlink } from '../lib/connectors'
 
 function ConnectWallet(): JSX.Element {
-  const { activate, activateBrowserWallet } = useEthers();
+  const { activate, activateBrowserWallet } = useEthers()
 
-  const { onOpen, isOpen, onClose } = useDisclosure();
+  const { onOpen, isOpen, onClose } = useDisclosure()
 
   return (
     <>
@@ -40,7 +40,7 @@ function ConnectWallet(): JSX.Element {
               variant="outline"
               rightIcon={<Image maxWidth="20px" src="/images/logo-metamask.png" alt="MetaMask" />}
               onClick={() => {
-                activateBrowserWallet();
+                activateBrowserWallet()
               }}
             >
               MetaMask
@@ -55,7 +55,7 @@ function ConnectWallet(): JSX.Element {
                 <Image maxWidth="20px" src="/images/logo-walletconnect.svg" alt="WalletConnect" />
               }
               onClick={() => {
-                activate(walletconnect);
+                activate(walletconnect)
               }}
             >
               WalletConnect
@@ -70,7 +70,7 @@ function ConnectWallet(): JSX.Element {
                 <Image maxWidth="20px" src="/images/logo-coinbase.jpg" alt="Coinbase Wallet" />
               }
               onClick={() => {
-                activate(walletlink);
+                activate(walletlink)
               }}
             >
               Coinbase Wallet
@@ -79,7 +79,7 @@ function ConnectWallet(): JSX.Element {
         </ModalContent>
       </Modal>
     </>
-  );
+  )
 }
 
-export default ConnectWallet;
+export default ConnectWallet

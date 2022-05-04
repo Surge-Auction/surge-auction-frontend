@@ -1,13 +1,13 @@
-import { ApolloProvider } from '@apollo/client';
-import { ChakraProvider } from '@chakra-ui/react';
-import { ChainId, Config, DAppProvider } from '@usedapp/core';
-import type { AppProps } from 'next/app';
-import React from 'react';
-import { useApollo } from '../lib/apolloClient';
-import Theme from '../components/layout/Theme';
+import { ApolloProvider } from '@apollo/client'
+import { ChakraProvider } from '@chakra-ui/react'
+import { ChainId, Config, DAppProvider } from '@usedapp/core'
+import type { AppProps } from 'next/app'
+import React from 'react'
+import { useApollo } from '../lib/apolloClient'
+import Theme from '../components/layout/Theme'
 
 // scaffold-eth's INFURA_ID, SWAP IN YOURS FROM https://infura.io/dashboard/ethereum
-export const INFURA_ID = '';
+export const INFURA_ID = ''
 
 const config: Config = {
   readOnlyUrls: {
@@ -25,10 +25,10 @@ const config: Config = {
     ChainId.Localhost,
     ChainId.Hardhat
   ]
-};
+}
 
 const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
-  const apolloClient = useApollo(pageProps);
+  const apolloClient = useApollo(pageProps)
   return (
     <ApolloProvider client={apolloClient}>
       <DAppProvider config={config}>
@@ -37,7 +37,7 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
         </ChakraProvider>
       </DAppProvider>
     </ApolloProvider>
-  );
-};
+  )
+}
 
-export default MyApp;
+export default MyApp
