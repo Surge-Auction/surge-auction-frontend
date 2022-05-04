@@ -1,20 +1,7 @@
-import {
-  Alert,
-  AlertIcon,
-  Box,
-  Button,
-  Divider,
-  Heading,
-  Input,
-  Text,
-  Image
-} from '@chakra-ui/react';
-import { useEthers } from '@usedapp/core';
+import { Box, Heading } from '@chakra-ui/react';
 import Layout from '../components/layout/Layout';
 
 function CreateAuction(): JSX.Element {
-  const { library } = useEthers();
-
   return (
     <Layout>
       <Heading as="h1" mb="12">

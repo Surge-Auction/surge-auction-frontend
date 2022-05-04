@@ -1,25 +1,9 @@
 import { Box, Divider, Text, Center } from '@chakra-ui/react';
-import { ChainId, useEthers, useSendTransaction } from '@usedapp/core';
-import { providers } from 'ethers';
+
 import React from 'react';
 import Layout from '../components/layout/Layout';
 
-/**
- * Constants & Helpers
- */
-
-const localProvider = new providers.StaticJsonRpcProvider('http://localhost:8545');
-
-const ROPSTEN_CONTRACT_ADDRESS = '';
-
 function HomeIndex(): JSX.Element {
-  const { account, chainId, library } = useEthers();
-
-  // Use the localProvider as the signer to send ETH to our wallet
-  const { sendTransaction } = useSendTransaction({
-    signer: localProvider.getSigner()
-  });
-
   return (
     <Layout>
       <Center>

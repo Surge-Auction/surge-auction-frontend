@@ -7,7 +7,6 @@ import {
   Button,
   Container,
   Flex,
-  Image,
   Link,
   Menu,
   MenuButton,
@@ -25,7 +24,6 @@ import { useEthers, useNotifications } from '@usedapp/core';
 import blockies from 'blockies-ts';
 import NextLink from 'next/link';
 import React from 'react';
-import Balance from '../Balance';
 import ConnectWallet from '../ConnectWallet';
 import Head, { MetaProps } from './Head';
 import Theme from './Theme';

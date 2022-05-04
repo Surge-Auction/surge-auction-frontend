@@ -1,6 +1,6 @@
 import { ApolloProvider } from '@apollo/client';
 import { ChakraProvider } from '@chakra-ui/react';
-import { ChainId, Config, DAppProvider, MULTICALL_ADDRESSES } from '@usedapp/core';
+import { ChainId, Config, DAppProvider } from '@usedapp/core';
 import type { AppProps } from 'next/app';
 import React from 'react';
 import { useApollo } from '../lib/apolloClient';

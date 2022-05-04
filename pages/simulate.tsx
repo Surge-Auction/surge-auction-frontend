@@ -1,13 +1,9 @@
 import {
-  Alert,
-  AlertIcon,
   Box,
   Button,
-  Divider,
   Heading,
   Input,
   Text,
-  Image,
   Slider,
   SliderTrack,
   SliderFilledTrack,
@@ -17,34 +13,44 @@ import {
   InputLeftAddon,
   InputRightAddon,
   Stack,
-  Flex,
   Spacer,
-  useControllableProp,
-  useControllableState,
-  Tooltip
+  Tooltip,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper
 } from '@chakra-ui/react';
-import { useEthers } from '@usedapp/core';
 import Layout from '../components/layout/Layout';
 import React, { useState, useEffect, useRef } from 'react';
 import functionPlot from 'function-plot';
 
 function Simulate(): JSX.Element {
-  const { library } = useEthers();
   /* Equation values */
-  const [maximaValue, setMaximaValue] = useState(0);
-  const [floorPriceValue, setFloorpriceValue] = useState(0);
-  const [surgeAmount, setSurgeAmount] = useState(0);
-  const [decayLength, setDecayLength] = useState(0);
+  const [floorPriceValue, setFloorpriceValue] = useState(1);
+  // Have maxima default to result of tValue
+  const [maximaValue, setMaximaValue] = useState(1);
+  // Surge amount as a percentage.  Cannot exceed 100% (maxima)
+  const [surgeAmount, setSurgeAmount] = useState(1);
+  const [decayLength, setDecayLength] = useState(1);
 
-  const [tValue, setTValue] = useState(0);
+  // How to calc t is yet to be known
+  const [tValue, setTValue] = useState(1);
 
+  // Final price
+  const [price, setPrice] = useState(1);
+
+  /* Slider Tooltip values */
   const [showTooltipFloorPrice, setShowTooltipFloorPrice] = useState(false);
   const [showTooltipMaxima, setShowTooltipMaxima] = useState(false);
   const [showTooltipSurgeAmount, setShowTooltipSurgeAmount] = useState(false);
   const [showTooltipDecayL, setShowTooltipDecayL] = useState(false);
+  const [showTooltipTValue, setShowTooltipTValue] = useState(false);
 
-  /* Bool for start/stop button */
-  const [start, setStart] = useState(false);
+  /* Buttons */
+  // Bool for start/stop button
+  const [startButton, setStartButton] = useState(false);
+  const [resetButton, setResetButton] = useState(false);
 
   /* FunctionPlot stuff */
   /* I really dislike how functionPlot is set here, 
@@ -52,9 +58,9 @@ function Simulate(): JSX.Element {
   const ref = useRef(null);
   const inputRef = useRef(null);
   const contentsBounds = ref;
-  let width = 1000;
-  let height = 800;
-  const ratio = contentsBounds.width / width;
+  let width: number;
+  let height: number;
+  const ratio: number = contentsBounds.width / width;
   width *= ratio;
   height *= ratio;
 
@@ -63,18 +69,19 @@ function Simulate(): JSX.Element {
       target: '#graph',
       width,
       height,
-      yAxis: { domain: [-1, 50] },
+      xAxis: { domain: [0, 50] },
+      yAxis: { domain: [0, 100] },
       grid: true,
       data: [
         {
-          fn: `${10}*sqrt(x/10)`
+          fn: `${floorPriceValue}*sqrt(x/10)`
         },
         {
-          fn: `${floorPriceValue}*sqrt(${maximaValue}/10)`
+          fn: `${floorPriceValue}*sqrt(${maximaValue}/${tValue})`
         }
       ]
     });
-  }, [floorPriceValue, maximaValue]);
+  }, [floorPriceValue, maximaValue, tValue]);
 
   /* End of the function plot */
 
@@ -106,64 +113,47 @@ function Simulate(): JSX.Element {
               </Box>
             </Stack>
           </Box>
-          {/* New Slider */}
         </Box>
 
-        <Box>
-          {/* Sliders */}
+        {/* Floor Price */}
+        <Box pb={5}>
+          <Text pb={2}>Floor Price</Text>
+          {/* Number Input */}
+          <NumberInput
+            onChange={(val) => setFloorpriceValue(Number(val))}
+            value={floorPriceValue}
+            max={50}
+          >
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+
+          {/* Maxima */}
           <Box pb={5}>
-            <InputGroup size="sm">
-              <InputLeftAddon children="Floor Price" />
-              <Input placeholder="" />
-              <InputRightAddon children="ETH" />
-            </InputGroup>
-            <Slider
-              aria-label="slider-ex-6"
-              onChangeEnd={(val) => setFloorpriceValue(val)}
-              onMouseEnter={() => setShowTooltipFloorPrice(true)}
-              onMouseLeave={() => setShowTooltipFloorPrice(false)}
+            <Text pb={2}>Maxima</Text>
+            {/* Number Input */}
+            <NumberInput
+              onChange={(val) => setMaximaValue(Number(val))}
+              value={maximaValue}
+              min={1}
+              max={50}
+              pb={2}
             >
-              <SliderMark value={0} mt="1" ml="1" fontSize="sm">
-                0
-              </SliderMark>
-              <SliderMark value={93.5} mt="1" ml="1" fontSize="sm">
-                1000
-              </SliderMark>
-              <SliderMark
-                value={floorPriceValue}
-                textAlign="center"
-                bg="blue.500"
-                color="white"
-                mt="-10"
-                ml="-5"
-                w="12"
-              ></SliderMark>
-              <SliderTrack>
-                <SliderFilledTrack />
-              </SliderTrack>
-              <Tooltip
-                hasArrow
-                bg="blue.500"
-                color="white"
-                placement="top"
-                isOpen={showTooltipFloorPrice}
-                label={`${floorPriceValue}`}
-              >
-                <SliderThumb />
-              </Tooltip>
-            </Slider>
-          </Box>
-
-          {/* New Slider */}
-          <Box pb={5}>
-            <InputGroup size="sm">
-              <InputLeftAddon children="Maxima" />
-              <Input placeholder="" />
-              <InputRightAddon children="#" />
-            </InputGroup>
-
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+            {/* Slider */}
             <Slider
               aria-label="slider-ex-6"
+              defaultValue={1}
+              min={1}
+              max={100}
               onChange={(val) => setMaximaValue(val)}
               onMouseEnter={() => setShowTooltipMaxima(true)}
               onMouseLeave={() => setShowTooltipMaxima(false)}
@@ -199,94 +189,173 @@ function Simulate(): JSX.Element {
               </Tooltip>
             </Slider>
           </Box>
-        </Box>
-        {/* New Slider */}
-        <Box pb={5}>
-          <InputGroup size="sm">
-            <InputLeftAddon children="Surge Amount" />
-            <Input placeholder="" />
-            <InputRightAddon children="%" />
-          </InputGroup>
-          <Slider
-            aria-label="slider-ex-6"
-            onChange={(val) => setFloorpriceValue(val)}
-            onMouseEnter={() => setShowTooltipSurgeAmount(true)}
-            onMouseLeave={() => setShowTooltipSurgeAmount(false)}
-          >
-            <SliderMark value={0} mt="1" ml="1" fontSize="sm">
-              0
-            </SliderMark>
 
-            <SliderMark value={93} mt="1" ml="1" fontSize="sm">
-              100%
-            </SliderMark>
-            <SliderMark
-              value={floorPriceValue}
-              textAlign="center"
-              bg="blue.500"
-              color="white"
-              mt="-10"
-              ml="-5"
-              w="12"
-            ></SliderMark>
-            <SliderTrack>
-              <SliderFilledTrack />
-            </SliderTrack>
-            <Tooltip
-              hasArrow
-              bg="blue.500"
-              color="white"
-              placement="top"
-              isOpen={showTooltipSurgeAmount}
-              label={`${surgeAmount}%`}
+          {/* Slider */}
+          <Box pb={5}>
+            <Text pb={2}>T Value</Text>
+            {/* Number Input */}
+            <NumberInput onChange={(val) => setTValue(Number(val))} value={tValue} max={50}>
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+            {/* Slider */}
+            <Slider
+              aria-label="slider-ex-6"
+              defaultValue={5}
+              min={1}
+              max={100}
+              onChange={(val) => setTValue(val)}
+              onMouseEnter={() => setShowTooltipTValue(true)}
+              onMouseLeave={() => setShowTooltipTValue(false)}
             >
-              <SliderThumb />
-            </Tooltip>
-          </Slider>
-        </Box>
-        {/* New Slider */}
-        <Box pb={5}>
-          <InputGroup size="sm">
-            <InputLeftAddon children="Decay Length" />
-            <Input placeholder="" />
-            <InputRightAddon children="Blocks" />
-          </InputGroup>
-          <Slider
-            aria-label="slider-ex-6"
-            onChange={(val) => setFloorpriceValue(val)}
-            onMouseEnter={() => setShowTooltipDecayL(true)}
-            onMouseLeave={() => setShowTooltipDecayL(false)}
-          >
-            <SliderMark value={0} mt="1" ml="1" fontSize="sm">
-              0
-            </SliderMark>
-            <SliderMark value={93.5} mt="1" ml="1" fontSize="sm">
-              1000
-            </SliderMark>
-            <SliderMark
-              value={floorPriceValue}
-              textAlign="center"
-              bg="blue.500"
-              color="white"
-              mt="-10"
-              ml="-5"
-              w="12"
-            ></SliderMark>
-            <SliderTrack>
-              <SliderFilledTrack />
-            </SliderTrack>
-            <Tooltip
-              hasArrow
-              bg="blue.500"
-              color="white"
-              placement="top"
-              isOpen={showTooltipDecayL}
-              label={`${decayLength}`}
+              <SliderMark value={0} mt="1" ml="1" fontSize="sm">
+                0
+              </SliderMark>
+
+              <SliderMark value={92.5} mt="1" ml="1" fontSize="sm">
+                10000
+              </SliderMark>
+              <SliderMark
+                value={maximaValue}
+                textAlign="center"
+                bg="blue.500"
+                color="white"
+                mt="-10"
+                ml="-5"
+                w="12"
+              ></SliderMark>
+              <SliderTrack>
+                <SliderFilledTrack />
+              </SliderTrack>
+              <Tooltip
+                hasArrow
+                bg="blue.500"
+                color="white"
+                placement="top"
+                isOpen={showTooltipTValue}
+                label={`${tValue}`}
+              >
+                <SliderThumb />
+              </Tooltip>
+            </Slider>
+          </Box>
+          {/* Surge Amount */}
+          <Box pb={5}>
+            <Text pb={2}>Surge Amount</Text>
+            {/* Number Input */}
+            <NumberInput
+              onChange={(val) => setSurgeAmount(Number(val))}
+              value={surgeAmount}
+              max={100}
             >
-              <SliderThumb />
-            </Tooltip>
-          </Slider>
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+            {/* Slider */}
+            <Slider
+              aria-label="slider-ex-6"
+              defaultValue={5}
+              min={0}
+              max={100}
+              onChange={(val) => setSurgeAmount(val)}
+              onMouseEnter={() => setShowTooltipSurgeAmount(true)}
+              onMouseLeave={() => setShowTooltipSurgeAmount(false)}
+            >
+              <SliderMark value={0} mt="1" ml="1" fontSize="sm">
+                0
+              </SliderMark>
+
+              <SliderMark value={93} mt="1" ml="1" fontSize="sm">
+                100%
+              </SliderMark>
+              <SliderMark
+                value={floorPriceValue}
+                textAlign="center"
+                bg="blue.500"
+                color="white"
+                mt="-10"
+                ml="-5"
+                w="12"
+              ></SliderMark>
+              <SliderTrack>
+                <SliderFilledTrack />
+              </SliderTrack>
+              <Tooltip
+                hasArrow
+                bg="blue.500"
+                color="white"
+                placement="top"
+                isOpen={showTooltipSurgeAmount}
+                label={`${surgeAmount}%`}
+              >
+                <SliderThumb />
+              </Tooltip>
+            </Slider>
+          </Box>
+          {/* Decay Length */}
+          <Box pb={5}>
+            <Text pb={2}>Decay Length</Text>
+            {/* Number Input */}
+            <NumberInput
+              onChange={(val) => setDecayLength(Number(val))}
+              value={decayLength}
+              max={1000}
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+            <Slider
+              aria-label="slider-ex-6"
+              defaultValue={5}
+              min={0}
+              max={100}
+              onChange={(val) => setDecayLength(val)}
+              onMouseEnter={() => setShowTooltipDecayL(true)}
+              onMouseLeave={() => setShowTooltipDecayL(false)}
+            >
+              <SliderMark value={0} mt="1" ml="1" fontSize="sm">
+                0
+              </SliderMark>
+              <SliderMark value={93.5} mt="1" ml="1" fontSize="sm">
+                1000
+              </SliderMark>
+              <SliderMark
+                value={floorPriceValue}
+                textAlign="center"
+                bg="blue.500"
+                color="white"
+                mt="-10"
+                ml="-5"
+                w="12"
+              ></SliderMark>
+              <SliderTrack>
+                <SliderFilledTrack />
+              </SliderTrack>
+              <Tooltip
+                hasArrow
+                bg="blue.500"
+                color="white"
+                placement="top"
+                isOpen={showTooltipDecayL}
+                label={`${decayLength}`}
+              >
+                <SliderThumb />
+              </Tooltip>
+            </Slider>
+          </Box>
+          {/* End Inputs */}
         </Box>
+        {/* End Container */}
+        {/* v WHAT DOES THIS BOX LEAD TO v */}
       </Box>
     </Layout>
   );
