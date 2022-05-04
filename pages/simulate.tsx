@@ -17,17 +17,45 @@ import {
   InputLeftAddon,
   InputRightAddon,
   Stack,
-  Flex
+  Flex,
+  Spacer
 } from '@chakra-ui/react';
 import { useEthers } from '@usedapp/core';
 import Layout from '../components/layout/Layout';
-import React, { useState } from 'react';
-import { FunctionPlot } from '../components/FunctionPlot';
+import React, { useState, useEffect, useRef } from 'react';
+import functionPlot from 'function-plot';
 
 function Simulate(): JSX.Element {
   const { library } = useEthers();
   const [maximaValue, setMaximaValue] = useState(0);
   const [floorPriceValue, setFloorpriceValue] = useState(0);
+  const [func, setFunc] = useState('x*x');
+
+  /* I really dislike how functionPlot is set here, 
+  would rather it be a component */
+  const ref = useRef(null);
+  const inputRef = useRef(null);
+  const contentsBounds = ref;
+  let width = 1000;
+  let height = 800;
+  const ratio = contentsBounds.width / width;
+  width *= ratio;
+  height *= ratio;
+
+  useEffect(() => {
+    functionPlot({
+      target: '#graph',
+      width,
+      height,
+      yAxis: { domain: [-5, 5] },
+      grid: true,
+      data: [
+        {
+          fn: 'x*x'
+        }
+      ]
+    });
+  }, [func]);
 
   return (
     <Layout>
@@ -37,7 +65,7 @@ function Simulate(): JSX.Element {
       <Box maxWidth="container.sm">
         <Box pb={5}>
           <Stack align="center">
-            <FunctionPlot />
+            <div ref={ref} id="graph"></div>
           </Stack>
           <Box pt={5}>
             <Stack spacing={4} direction="row" align="center">
@@ -46,39 +74,18 @@ function Simulate(): JSX.Element {
                 Start
               </Button>
               <Button colorScheme="teal" variant="outline">
+                Reset
+              </Button>
+              <Button colorScheme="teal" variant="outline">
                 Simulate Mint
               </Button>
+              <Spacer />
+              <Box>
+                <Text># Block</Text>
+              </Box>
             </Stack>
           </Box>
           {/* New Slider */}
-          <Box pt={5} pb={5}>
-            <InputGroup size="sm">
-              <InputLeftAddon children="Current Block" />
-              <Input placeholder="" />
-            </InputGroup>
-            <Slider aria-label="slider-ex-6" onChange={(val) => setFloorpriceValue(val)}>
-              <SliderMark value={0} mt="1" ml="1" fontSize="sm">
-                0
-              </SliderMark>
-
-              <SliderMark value={93.5} mt="1" ml="1" fontSize="sm">
-                1000
-              </SliderMark>
-              <SliderMark
-                value={floorPriceValue}
-                textAlign="center"
-                bg="blue.500"
-                color="white"
-                mt="-10"
-                ml="-5"
-                w="12"
-              ></SliderMark>
-              <SliderTrack>
-                <SliderFilledTrack />
-              </SliderTrack>
-              <SliderThumb />
-            </Slider>
-          </Box>
         </Box>
 
         <Box>
