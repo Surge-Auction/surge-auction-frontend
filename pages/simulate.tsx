@@ -18,7 +18,10 @@ import {
   InputRightAddon,
   Stack,
   Flex,
-  Spacer
+  Spacer,
+  useControllableProp,
+  useControllableState,
+  Tooltip
 } from '@chakra-ui/react';
 import { useEthers } from '@usedapp/core';
 import Layout from '../components/layout/Layout';
@@ -27,10 +30,23 @@ import functionPlot from 'function-plot';
 
 function Simulate(): JSX.Element {
   const { library } = useEthers();
+  /* Equation values */
   const [maximaValue, setMaximaValue] = useState(0);
   const [floorPriceValue, setFloorpriceValue] = useState(0);
-  const [func, setFunc] = useState('x*x');
+  const [surgeAmount, setSurgeAmount] = useState(0);
+  const [decayLength, setDecayLength] = useState(0);
 
+  const [tValue, setTValue] = useState(0);
+
+  const [showTooltipFloorPrice, setShowTooltipFloorPrice] = useState(false);
+  const [showTooltipMaxima, setShowTooltipMaxima] = useState(false);
+  const [showTooltipSurgeAmount, setShowTooltipSurgeAmount] = useState(false);
+  const [showTooltipDecayL, setShowTooltipDecayL] = useState(false);
+
+  /* Bool for start/stop button */
+  const [start, setStart] = useState(false);
+
+  /* FunctionPlot stuff */
   /* I really dislike how functionPlot is set here, 
   would rather it be a component */
   const ref = useRef(null);
@@ -47,15 +63,20 @@ function Simulate(): JSX.Element {
       target: '#graph',
       width,
       height,
-      yAxis: { domain: [-5, 5] },
+      yAxis: { domain: [-1, 50] },
       grid: true,
       data: [
         {
-          fn: 'x*x'
+          fn: `${10}*sqrt(x/10)`
+        },
+        {
+          fn: `${floorPriceValue}*sqrt(${maximaValue}/10)`
         }
       ]
     });
-  }, [func]);
+  }, [floorPriceValue, maximaValue]);
+
+  /* End of the function plot */
 
   return (
     <Layout>
@@ -96,11 +117,15 @@ function Simulate(): JSX.Element {
               <Input placeholder="" />
               <InputRightAddon children="ETH" />
             </InputGroup>
-            <Slider aria-label="slider-ex-6" onChange={(val) => setFloorpriceValue(val)}>
+            <Slider
+              aria-label="slider-ex-6"
+              onChangeEnd={(val) => setFloorpriceValue(val)}
+              onMouseEnter={() => setShowTooltipFloorPrice(true)}
+              onMouseLeave={() => setShowTooltipFloorPrice(false)}
+            >
               <SliderMark value={0} mt="1" ml="1" fontSize="sm">
                 0
               </SliderMark>
-
               <SliderMark value={93.5} mt="1" ml="1" fontSize="sm">
                 1000
               </SliderMark>
@@ -116,7 +141,16 @@ function Simulate(): JSX.Element {
               <SliderTrack>
                 <SliderFilledTrack />
               </SliderTrack>
-              <SliderThumb />
+              <Tooltip
+                hasArrow
+                bg="blue.500"
+                color="white"
+                placement="top"
+                isOpen={showTooltipFloorPrice}
+                label={`${floorPriceValue}`}
+              >
+                <SliderThumb />
+              </Tooltip>
             </Slider>
           </Box>
 
@@ -128,7 +162,12 @@ function Simulate(): JSX.Element {
               <InputRightAddon children="#" />
             </InputGroup>
 
-            <Slider aria-label="slider-ex-6" onChange={(val) => setMaximaValue(val)}>
+            <Slider
+              aria-label="slider-ex-6"
+              onChange={(val) => setMaximaValue(val)}
+              onMouseEnter={() => setShowTooltipMaxima(true)}
+              onMouseLeave={() => setShowTooltipMaxima(false)}
+            >
               <SliderMark value={0} mt="1" ml="1" fontSize="sm">
                 0
               </SliderMark>
@@ -148,7 +187,16 @@ function Simulate(): JSX.Element {
               <SliderTrack>
                 <SliderFilledTrack />
               </SliderTrack>
-              <SliderThumb />
+              <Tooltip
+                hasArrow
+                bg="blue.500"
+                color="white"
+                placement="top"
+                isOpen={showTooltipMaxima}
+                label={`${maximaValue}`}
+              >
+                <SliderThumb />
+              </Tooltip>
             </Slider>
           </Box>
         </Box>
@@ -159,7 +207,12 @@ function Simulate(): JSX.Element {
             <Input placeholder="" />
             <InputRightAddon children="%" />
           </InputGroup>
-          <Slider aria-label="slider-ex-6" onChange={(val) => setFloorpriceValue(val)}>
+          <Slider
+            aria-label="slider-ex-6"
+            onChange={(val) => setFloorpriceValue(val)}
+            onMouseEnter={() => setShowTooltipSurgeAmount(true)}
+            onMouseLeave={() => setShowTooltipSurgeAmount(false)}
+          >
             <SliderMark value={0} mt="1" ml="1" fontSize="sm">
               0
             </SliderMark>
@@ -179,7 +232,16 @@ function Simulate(): JSX.Element {
             <SliderTrack>
               <SliderFilledTrack />
             </SliderTrack>
-            <SliderThumb />
+            <Tooltip
+              hasArrow
+              bg="blue.500"
+              color="white"
+              placement="top"
+              isOpen={showTooltipSurgeAmount}
+              label={`${surgeAmount}%`}
+            >
+              <SliderThumb />
+            </Tooltip>
           </Slider>
         </Box>
         {/* New Slider */}
@@ -189,7 +251,12 @@ function Simulate(): JSX.Element {
             <Input placeholder="" />
             <InputRightAddon children="Blocks" />
           </InputGroup>
-          <Slider aria-label="slider-ex-6" onChange={(val) => setFloorpriceValue(val)}>
+          <Slider
+            aria-label="slider-ex-6"
+            onChange={(val) => setFloorpriceValue(val)}
+            onMouseEnter={() => setShowTooltipDecayL(true)}
+            onMouseLeave={() => setShowTooltipDecayL(false)}
+          >
             <SliderMark value={0} mt="1" ml="1" fontSize="sm">
               0
             </SliderMark>
@@ -208,7 +275,16 @@ function Simulate(): JSX.Element {
             <SliderTrack>
               <SliderFilledTrack />
             </SliderTrack>
-            <SliderThumb />
+            <Tooltip
+              hasArrow
+              bg="blue.500"
+              color="white"
+              placement="top"
+              isOpen={showTooltipDecayL}
+              label={`${decayLength}`}
+            >
+              <SliderThumb />
+            </Tooltip>
           </Slider>
         </Box>
       </Box>
